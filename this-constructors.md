@@ -69,4 +69,15 @@ console.log(person);
 Note that if we try to return anything else than an object, the JavaScript engine will simply ignore the value we provided and return the newly-created object instead. This is why we see 'Jane Doe' printed to the console, although we tried to return null.
 
 ### JavaScript this in method calls
+When a function is called as a method of an object, that function's this argument is set to the object the method is called on. Here, we're calling person.sayHi, and therefore the this value within the sayHi method refers to person.
+```JS
+const person = {
+    firstName: "John",
+    sayHi() {
+        console.log(`Hi, my name is ${this.firstName}!`);
+    }
+};
 
+person.sayHi();
+```
+### ff
