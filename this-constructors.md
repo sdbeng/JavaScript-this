@@ -101,4 +101,51 @@ Sometimes, the call site is a property chain which looks like this.
 In that case, the receiver is the most immediate property before the method, which is person in this example. The foo.bar prefix in the beginning doesn't influence our this binding.
 
 ### when a method loses its receiver
+One of the most common frustrations that developers have with this is when a method loses its receiver. Consider our initial example again. If we store a reference to the sayHi method in a variable, and later call that variable as a function, our intended receiver is lost.
+```JS
+const person = {
+    firstName: "John",
+    sayHi() {
+        console.log(`Hi, my name is ${this.firstName}!`);
+    }
+};
 
+const greet = person.sayHi;
+greet();
+```
+Within the sayHi function, this will refer to the global object, and not to person.
+This is because we now have a plain function call, and we're not in strict mode. Losing a receiver this way usually happens when we pass a method as a callback to another function. For example, setTimeout.
+```JS
+const person = {
+    firstName: "John",
+    sayHi() {
+        console.log(`Hi, my name is ${this.firstName}!`);
+    }
+};
+
+setTimeout(person.sayHi, 1000);
+```
+`setTimeout` will call our function with this set to the global object, which is probably not what we intended here. One solution to this problem is to add a wrapper function. That way, person.sayHi is still invoked as a method, and doesn't lose its intended receiver.
+```
+const person = {
+    firstName: "John",
+    sayHi() {
+        console.log(`Hi, my name is ${this.firstName}!`);
+    }
+};
+
+setTimeout(function () {
+    person.sayHi(); 
+},    1000);
+```
+Another solution that I want to mention here for the sake of completeness is the bind method, which allows us to tie our this to a specific object.
+```JS
+const person = {
+    firstName: "John",
+    sayHi() {
+        console.log(`Hi, my name is ${this.firstName}!`);
+    }
+};
+
+setTimeout(person.sayHi.bind(person), 1000);
+```
