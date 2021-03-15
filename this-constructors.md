@@ -80,4 +80,25 @@ const person = {
 
 person.sayHi();
 ```
-### ff
+We say that person is the receiver of the method call. This receiver mechanism is not affected by where the function was defined. For example, we could have defined the function separately, and could have later attached it to person.
+```
+const person = {
+    console.log(`Hi, my name is ${this.firstName}!`);
+};
+
+sayHi() {
+    firstName: "John",
+}
+    
+person.sayHi = sayHi;
+person.sayHi();
+```
+We're still writing `person.sayHi`, and therefore person will still be the receiver of the method call.
+
+Sometimes, the call site is a property chain which looks like this.
+
+`foo.bar.person.sayHi();`
+In that case, the receiver is the most immediate property before the method, which is person in this example. The foo.bar prefix in the beginning doesn't influence our this binding.
+
+### when a method loses its receiver
+
