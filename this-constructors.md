@@ -38,10 +38,35 @@ function Person(firstName, lastName) {
         lastName: "Roe"
     };
 }
+const person = new Person("Jane", "Doe");
+console.log(person);
 ```
+
+
+After we return from the function, the newly-created object that we previously initialized is lost because it's out of scope and nobody has a reference to it anymore.
+
+### Object is lost
+
+
+It's not a very common use case to return a different object from its constructor function, but it might make sense in certain scenarios. For example, in a development environment, we could wrap the returned object in a proxy and alert developers whenever they use that object incorrectly.
+
+```JS
+function Person(firstName, lastName) {
+    this.firstName = firstName;
+    console.log(this);
+
+
+    return new Proxy(this, {
+        get(target, name) {
+            // ...
+        }
+    });
+}
 
 const person = new Person("Jane", "Doe");
 console.log(person);
-After we return from the function, the newly-created object that we previously initialized is lost because it's out of scope and nobody has a reference to it anymore.
+```
+Note that if we try to return anything else than an object, the JavaScript engine will simply ignore the value we provided and return the newly-created object instead. This is why we see 'Jane Doe' printed to the console, although we tried to return null.
 
-### foo
+### JavaScript this in method calls
+
